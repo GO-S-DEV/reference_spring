@@ -5,15 +5,19 @@ import com.example.reference.repository.UserRepository;
 import com.example.reference.request.user.AddUserRequest;
 import com.example.reference.request.user.UserLoginRequest;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 @Service
 @Transactional
 @RequiredArgsConstructor
+@Slf4j
 public class UserService {
 
     private final UserRepository userRepository;
+    private final PasswordEncoder passwordEncoder;
 
     // 유저 로그인
     public String login(UserLoginRequest request) {
@@ -28,21 +32,33 @@ public class UserService {
     // 유저 추가
     public void addUser(AddUserRequest request) {
 
+        //:TODO 유효성 검사 추후에 추가
+
         // 계정이 이미 존재하는지 확인
-        userRepository.findByUserId(request.getUserId())
+        userRepository.findOptionalByUserId(request.getUserId())
             .ifPresent(user -> {
                 throw new IllegalArgumentException("이미 존재하는 계정입니다.");
             });
 
+        // 닉네임이 이미 존재하는지 확인
+        userRepository.findOptionalByNickname(request.getNickname())
+            .ifPresent(user -> {
+                throw new IllegalArgumentException("이미 존재하는 닉네임입니다.");
+            });
+
+        String encodedPassword = passwordEncoder.encode(request.getPassword());
+
         // 유저 추가
         User user = User.builder()
             .userId(request.getUserId())
-            .password(request.getPassword())
+            .password(encodedPassword)
             .nickname(request.getNickname())
             .memo(request.getMemo())
             .build();
 
         userRepository.save(user);
+
+        //:TODO 파일 저장 추후에 추가
 
     }
 
