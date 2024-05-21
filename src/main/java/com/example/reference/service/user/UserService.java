@@ -1,12 +1,19 @@
 package com.example.reference.service.user;
 
+import com.example.reference.entity.User;
+import com.example.reference.repository.UserRepository;
+import com.example.reference.request.user.AddUserRequest;
 import com.example.reference.request.user.UserLoginRequest;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 @Service
 @Transactional
+@RequiredArgsConstructor
 public class UserService {
+
+    private final UserRepository userRepository;
 
     // 유저 로그인
     public String login(UserLoginRequest request) {
@@ -19,8 +26,24 @@ public class UserService {
     }
 
     // 유저 추가
-    public void addUser() {
-        return;
+    public void addUser(AddUserRequest request) {
+
+        // 계정이 이미 존재하는지 확인
+        userRepository.findByUserId(request.getUserId())
+            .ifPresent(user -> {
+                throw new IllegalArgumentException("이미 존재하는 계정입니다.");
+            });
+
+        // 유저 추가
+        User user = User.builder()
+            .userId(request.getUserId())
+            .password(request.getPassword())
+            .nickname(request.getNickname())
+            .memo(request.getMemo())
+            .build();
+
+        userRepository.save(user);
+
     }
 
     // 유저 정보 조회

@@ -19,6 +19,18 @@ public class UserController {
 
     private final UserService userService;
 
+    // 유저 추가
+    @PostMapping(path = "/add")
+    @Operation(summary = "유저 추가", description = "유저를 추가합니다.")
+    public CommonResponse<Object> add(@RequestBody AddUserRequest request) {
+        userService.addUser(request);
+        return CommonResponse.builder()
+            .status(ResponseCode.SUCCESS.getStatus())
+            .code(ResponseCode.SUCCESS.getCode())
+            .build();
+    }
+
+
     // 유저 로그인
     @PostMapping(path = "/login")
     @Operation(summary = "로그인", description = "로그인합니다.")
