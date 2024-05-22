@@ -21,6 +21,16 @@ public class UserService {
 
     // 유저 로그인
     public String login(UserLoginRequest request) {
+
+        User user = userRepository.findOptionalByUserId(request.getUserId())
+            .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 계정입니다."));
+
+        if (!passwordEncoder.matches(request.getPassword(), user.getPassword())) {
+            throw new IllegalArgumentException("비밀번호가 일치하지 않습니다.");
+        }
+
+
+
         return "token";
     }
 

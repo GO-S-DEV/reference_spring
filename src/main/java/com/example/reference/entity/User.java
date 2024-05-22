@@ -1,11 +1,16 @@
 package com.example.reference.entity;
 
+import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
+import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
+import java.util.ArrayList;
+import java.util.List;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -42,5 +47,10 @@ public class User extends BaseEntity {
     @Column(name="memo", columnDefinition = "TEXT")
     @Comment("유저 메모")
     private String memo;
+
+    @OneToMany(mappedBy = "user", fetch = FetchType.LAZY, cascade = { CascadeType.PERSIST }, orphanRemoval = true)
+    @Comment("유저 권한")
+    @Builder.Default
+    private List<UserRole> userRoles = new ArrayList<>();
 
 }
