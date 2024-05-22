@@ -32,14 +32,14 @@ public class Role extends BaseEntity {
     private String title;
 
     // 분류
-    @Column(name = "classification", columnDefinition = "VARCHAR(255)", nullable = false)
+    @Column(name = "classification", columnDefinition = "VARCHAR(255)", unique = true, nullable = false)
     @Comment("분류")
     private String classification;
 
     // 설명
-    @Column(name = "memo", columnDefinition = "TEXT")
+    @Column(name = "description", columnDefinition = "VARCHAR(255)")
     @Comment("설명")
-    private String memo;
+    private String description;
 
 
 

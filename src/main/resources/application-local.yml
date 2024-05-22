@@ -7,16 +7,16 @@ spring:
 
   sql:
     init:
-      mode: never # always, never, embedded 더미 데이터를 넣을 때 사용(개발할 때만 사용)
+      mode: always # always, never, embedded 더미 데이터를 넣을 때 사용(개발할 때만 사용)
   jpa:
     hibernate:
-      ddl-auto: update # create, update, validate
+      ddl-auto: create # create, update, validate
     properties:
       hibernate:
         show_sql: true
         format_sql: true
     database-platform: org.hibernate.dialect.MySQLDialect
-    defer-datasource-initialization: false # 더미 데이터를 넣을 때 사용(개발할 때만 사용)
+    defer-datasource-initialization: true # 더미 데이터를 넣을 때 사용(개발할 때만 사용)
   datasource:
     driver-class-name: com.mysql.cj.jdbc.Driver
     url: jdbc:mysql://localhost:3306/dev_reference?useSSL=false&serverTimezone=Asia/Seoul&allowPublicKeyRetrieval=true
