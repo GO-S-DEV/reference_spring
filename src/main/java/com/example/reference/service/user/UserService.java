@@ -1,9 +1,14 @@
 package com.example.reference.service.user;
 
+import com.example.reference.entity.Role;
 import com.example.reference.entity.User;
+import com.example.reference.entity.UserRole;
+import com.example.reference.repository.RoleRepository;
 import com.example.reference.repository.UserRepository;
+import com.example.reference.repository.UserRoleRepository;
 import com.example.reference.request.user.AddUserRequest;
 import com.example.reference.request.user.UserLoginRequest;
+import com.example.reference.rules.ClassificationType;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -17,6 +22,8 @@ import org.springframework.transaction.annotation.Transactional;
 public class UserService {
 
     private final UserRepository userRepository;
+    private final RoleRepository roleRepository;
+    private final UserRoleRepository userRoleRepository;
     private final PasswordEncoder passwordEncoder;
 
     // 유저 로그인
@@ -66,7 +73,17 @@ public class UserService {
             .memo(request.getMemo())
             .build();
 
+        // Role 가져 오기
+        Role role = roleRepository.findByClassification(ClassificationType.ROLE_USER.getName());
+
+        // 권한 추가
+        UserRole userRole = UserRole.builder()
+            .role(role)
+            .user(user)
+            .build();
+
         userRepository.save(user);
+        userRoleRepository.save(userRole);
 
         //:TODO 파일 저장 추후에 추가
 

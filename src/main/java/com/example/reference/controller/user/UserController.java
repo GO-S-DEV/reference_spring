@@ -7,6 +7,7 @@ import com.example.reference.rules.ResponseCode;
 import com.example.reference.service.user.UserService;
 import io.swagger.v3.oas.annotations.Operation;
 import lombok.RequiredArgsConstructor;
+import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -22,7 +23,7 @@ public class UserController {
     // 유저 추가
     @PostMapping(path = "/add")
     @Operation(summary = "유저 추가", description = "유저를 추가합니다.")
-    public CommonResponse<Object> add(@RequestBody AddUserRequest request) {
+    public CommonResponse<Object> add(@ModelAttribute AddUserRequest request) {
         userService.addUser(request);
         return CommonResponse.builder()
             .status(ResponseCode.SUCCESS.getStatus())
