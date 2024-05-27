@@ -1,7 +1,6 @@
 package com.example.reference.config;
 
 import com.example.reference.config.jwt.CustomReTokenFilter;
-import com.example.reference.config.jwt.JwtSecurityConfig;
 import com.example.reference.config.jwt.JwtTokenProvider;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
@@ -28,8 +27,6 @@ import org.springframework.web.filter.CorsFilter;
 public class SecurityConfig {
 
     private final JwtTokenProvider jwtTokenProvider;
-    private final CorsFilter corsFilter;
-
 
     @Bean
     public PasswordEncoder passwordEncoder() {
@@ -46,8 +43,12 @@ public class SecurityConfig {
 
         http
             .csrf(AbstractHttpConfigurer::disable)
-            .addFilterBefore(corsFilter, UsernamePasswordAuthenticationFilter.class)
+//            .addFilterBefore(corsFilter, UsernamePasswordAuthenticationFilter.class)
             .addFilterBefore(new CustomReTokenFilter(jwtTokenProvider), UsernamePasswordAuthenticationFilter.class)
+            .exceptionHandling(exceptionHandling -> exceptionHandling
+                .accessDeniedHandler(new CustomAccessDeniedHandler())
+                .authenticationEntryPoint(new CustomAuthenticationEntryPoint())
+            )
             .authorizeHttpRequests((authorize) -> authorize
                 .requestMatchers(new AntPathRequestMatcher("/ws")).permitAll()
                 .requestMatchers(new AntPathRequestMatcher("/pubsub/**")).permitAll()
