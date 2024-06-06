@@ -1,5 +1,6 @@
 package com.example.reference.service.user;
 
+import com.example.reference.dto.UserDto;
 import com.example.reference.entity.Role;
 import com.example.reference.entity.User;
 import com.example.reference.entity.UserRole;
@@ -9,6 +10,7 @@ import com.example.reference.repository.UserRoleRepository;
 import com.example.reference.request.user.AddUserRequest;
 import com.example.reference.request.user.UserLoginRequest;
 import com.example.reference.rules.ClassificationType;
+import java.util.List;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -16,7 +18,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 @Service
-@Transactional
 @RequiredArgsConstructor
 @Slf4j
 public class UserService {
@@ -27,6 +28,7 @@ public class UserService {
     private final PasswordEncoder passwordEncoder;
 
     // 유저 로그인
+    @Transactional
     public String login(UserLoginRequest request) {
 
         User user = userRepository.findOptionalByUserId(request.getUserId())
@@ -47,6 +49,7 @@ public class UserService {
     }
 
     // 유저 추가
+    @Transactional
     public void addUser(AddUserRequest request) {
 
         //:TODO 유효성 검사 추후에 추가
@@ -90,8 +93,10 @@ public class UserService {
     }
 
     // 유저 정보 조회
-    public void getUser() {
-        return;
+    @Transactional(readOnly = true)
+    public UserDto getUser() {
+
+        return null;
     }
 
     // 유저 정보 수정
@@ -105,13 +110,28 @@ public class UserService {
     }
 
     // 유저 목록 조회
-    public void getUsers() {
+    public List<UserDto> getUsers() {
+        return null;
+    }
+
+    // 유저 비밀번호 변경
+    public void changePassword() {
+        return;
+    }
+
+    // 유저 비밀번호 찾기
+    public void findPassword() {
+        return;
+    }
+
+    // 유저 비밀번호 초기화
+    public void resetPassword() {
         return;
     }
 
     // 유저 프로필 이미지 조회
-    public void getProfileImage() {
-        return;
+    public UserDto getProfileImage() {
+        return null;
     }
 
     // 유저 프로필 이미지 수정
